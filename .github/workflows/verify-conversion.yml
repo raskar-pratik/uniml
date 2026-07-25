@@ -23,7 +23,8 @@ jobs:
         run: docker build -f deployment/Dockerfile -t uniml:verify .
 
       - name: Report image size
-        run: docker images uniml:verify --format 'Image size: {{.Size}}'
+        run: |
+          docker images uniml:verify --format 'Image size: {{.Size}}'
 
       - name: Convert a real .pt and .h5 through the in-container API
         run: |
