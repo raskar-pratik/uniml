@@ -1,0 +1,58 @@
+name: Verify model conversion (Docker)
+
+# Source of truth that the conversion fix works: build the real deployment
+# image, run the container, and convert a real PyTorch (.pt) and TensorFlow
+# (.h5) model through the in-container HTTP API. The job fails unless BOTH
+# report conversion_status == "success". Runs on a clean CI machine so the
+# result never depends on a developer's local Docker setup.
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-conversion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build image from deployment/Dockerfile
+        run: docker build -f deployment/Dockerfile -t uniml:verify .
+
+      - name: Report image size
+        run: docker images uniml:verify --format 'Image size: {{.Size}}'
+
+      - name: Convert a real .pt and .h5 through the in-container API
+        run: |
+          mkdir -p _out
+          docker run --rm \
+            -v "$PWD/verify_incontainer.py:/app/verify_incontainer.py:ro" \
+            -v "$PWD/_out:/out" \
+            uniml:verify python verify_incontainer.py
+
+      - name: Fail unless both conversions succeeded
+        run: |
+          python3 - <<'PY'
+          import json, sys
+
+          with open("_out/result.json") as f:
+              data = json.load(f)
+
+          print(json.dumps(data, indent=2))
+
+          failed = []
+          for framework in ("pytorch", "tensorflow"):
+              status = (data.get(framework) or {}).get("conversion_status")
+              print(f"{framework}: conversion_status={status}")
+              if status != "success":
+                  failed.append(framework)
+
+          if failed:
+              print(f"::error::Conversion did not succeed for: {', '.join(failed)}")
+              sys.exit(1)
+
+          print("Both PyTorch and TensorFlow conversions succeeded.")
+          PY

@@ -1,0 +1,75 @@
+# ============================================================
+# UniML .gitignore
+# ============================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Uploads & Generated (runtime data) ---
+uploads/*
+!uploads/.gitkeep
+generated/*
+!generated/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# --- Environment ---
+.env
+.env.local
+.env.production
+
+# --- Testing ---
+.coverage
+htmlcov/
+.pytest_cache/
+
+# --- Misc ---
+*.log
+*.zip
+
+# --- Additional virtualenvs ---
+.venv311/
+
+# --- Node / frontend build ---
+node_modules/
+web/dist/
+
+# --- Scratch / throwaway files ---
+_*.txt
+_*.log
+_local_result.json
+
+# --- Legacy / scratch / data (not source) ---
+frontend/
+update_index.py
+update_pages.py
+models/
+stitch_downloads/
+test.pkl

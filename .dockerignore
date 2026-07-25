@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / frontend build artifacts (rebuilt inside the image)
+web/node_modules/
+web/dist/
+node_modules/
+
+# Runtime data — should not be baked into the image
+uploads/*
+generated/*
+logs/*
+
+# Local env & misc
+.env
+.env.local
+.env.production
+.git/
+.idea/
+.vscode/
+*.log

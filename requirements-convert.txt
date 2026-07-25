@@ -1,0 +1,17 @@
+# ============================================================
+# UniML — Server-side conversion dependencies
+# ============================================================
+# These heavy ML libraries are what the converter/ handlers import to turn
+# PyTorch / TensorFlow models into ONNX. They are kept OUT of requirements.txt
+# so local dev and tests stay light; the deployment image installs this file so
+# conversion runs reliably server-side with zero client install.
+#
+# scikit-learn / onnx / skl2onnx are already in requirements.txt (always on).
+#
+# NOTE: torch is installed from the CPU wheel index inside deployment/Dockerfile
+# (no CUDA needed for conversion). The pin below is satisfied by that CPU build;
+# it is listed here for discoverability and for non-Docker installs.
+
+torch>=2.2.0
+tensorflow-cpu>=2.16.0
+tf2onnx>=1.16.0
